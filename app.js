@@ -7,6 +7,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoute');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 
@@ -40,6 +41,12 @@ app.use('/api/auth', authRoutes);
 
 // Test routes
 app.use('/api/test', testRoutes);
+
+// Dashboard routes
+app.use('/api/dashboard', dashboardRoutes);
+
+// transactions routes
+app.use('/api', dashboardRoutes);
 
 // Connect to database
 connectDB();
