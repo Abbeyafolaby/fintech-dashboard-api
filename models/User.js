@@ -19,6 +19,11 @@ type: String,
 enum: ['user', 'admin'],
 default: 'user',
 },
+balance: {
+    type: Number,
+    default: 40000, // Default balance
+    min: [0, 'Balance cannot be negative'],
+},
 });
 
 // Hash password before saving

@@ -17,6 +17,10 @@ const transactionSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'Description cannot exceed 100 characters']
   },
+  balanceAfter: {
+    type: Number,
+    required: [true, 'Balance after transaction is required'],
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

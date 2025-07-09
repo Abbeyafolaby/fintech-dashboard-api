@@ -8,6 +8,8 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -47,6 +49,10 @@ app.use('/api/dashboard', dashboardRoutes);
 
 // transactions routes
 app.use('/api', dashboardRoutes);
+
+app.use('/api/transactions', transactionRoutes);
+
+app.use(errorHandler);
 
 // Connect to database
 connectDB();
