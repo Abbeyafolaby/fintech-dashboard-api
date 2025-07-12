@@ -4,26 +4,25 @@ const Transaction = require('../models/Transactions');
 exports.makeTransaction = async (req, res, next) => {
 try {
 const { type, amount, description } = req.body;
+const userId = req.user._id; // Make sure this line exists
 
-// Validation
-if (!type || !amount) {
-    throw new Error('Type and amount are required');
-}
-
+// Validate input
 if (!['credit', 'debit'].includes(type)) {
     throw new Error('Invalid transaction type');
 }
 
-if (isNaN(amount) || amount < 1) {
+if (typeof amount !== 'number' || amount < 1) {
     throw new Error('Amount must be a number greater than 0');
 }
 
-const user = await User.findById(req.user._id);
+// Get user with current balance
+const user = await User.findById(userId);
+
 if (!user) {
     throw new Error('User not found');
 }
 
-// Check sufficient funds for debit
+// Check for sufficient funds for debit
 if (type === 'debit' && user.balance < amount) {
     const err = new Error('Insufficient funds');
     err.statusCode = 400;
@@ -35,25 +34,34 @@ const newBalance = type === 'credit'
     ? user.balance + amount 
     : user.balance - amount;
 
-// Update user
+// Update user balance
 user.balance = newBalance;
 await user.save();
 
-// Create transaction
+// Create transaction record
 const transaction = await Transaction.create({
-    user: req.user._id,
+    user: userId,
     type,
     amount,
-    description,
+    description: description || '',
     balanceAfter: newBalance
 });
 
 res.status(201).json({
     success: true,
-    data: transaction
+    data: {
+    transaction: {
+        _id: transaction._id,
+        type: transaction.type,
+        amount: transaction.amount,
+        description: transaction.description,
+        balanceAfter: transaction.balanceAfter,
+        timestamp: transaction.timestamp
+    },
+    newBalance
+    }
 });
-
 } catch (error) {
-next(error); // Pass to error handler
+next(error);
 }
 };
