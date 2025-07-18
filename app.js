@@ -10,6 +10,7 @@ const testRoutes = require('./routes/testRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const path = require('path');
 
 const app = express();
 
@@ -33,6 +34,16 @@ app.use(limiter);
 //  Enable CORS
 app.use(cors());
 
+// Configure CORS middleware
+app.use(cors({
+  origin: true, // You can specify specific origins here if needed
+  credentials: true // Allow credentials (Authorization headers)
+}));
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+const { swaggerUi, swaggerSpec } = require('./swagger');
 
 
 app.get('/', (req, res) => {
@@ -53,6 +64,9 @@ app.use('/api', dashboardRoutes);
 app.use('/api/transactions', transactionRoutes);
 
 app.use(errorHandler);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 // Connect to database
 connectDB();
