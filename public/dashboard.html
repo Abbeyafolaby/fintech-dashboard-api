@@ -4,8 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>This is the Dashboard Page</h1>
+    <div class="container">
+        <div class="nav-links">
+            <a href="transaction.html">Make a transaction</a>
+        </div>
+        <h1>Dashboard</h1>
+        <div id="userInfo"></div>
+        <a href="login.html">
+        <button onclick="logout()">Logout</button>
+        </a>
+    </div>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>

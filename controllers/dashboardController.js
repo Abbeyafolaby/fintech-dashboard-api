@@ -1,35 +1,32 @@
-const Transaction = require('../models/Transactions');
 const User = require('../models/User');
+const Transaction = require('../models/Transactions');
 
 // @desc    Get dashboard summary
 // @route   GET /api/dashboard
 // @access  Private
 exports.getDashboard = async (req, res) => {
-try {
-// Get all transactions for the logged-in user
-const transactions = await Transaction.find({ user: req.user.id });
+    try {
+        // Fetch user with balance included
+        const user = await User.findById(req.user.id);
+        
+        // Debug log to check what's being fetched
+        console.log('User data from DB:', user);
 
-// Calculate balance
-const balance = transactions.reduce((total, transaction) => {
-    return transaction.type === 'credit' 
-    ? total + transaction.amount 
-    : total - transaction.amount;
-}, 0);
+        // Get total transactions
+        const totalTransactions = await Transaction.countDocuments({ user: req.user.id });
 
-res.status(200).json({
-    success: true,
-    username: req.user.username,
-    role: req.user.role,
-    balance,
-    totalTransactions: transactions.length,
-    transactions // Optional: include transaction details
-});
-} catch (error) {
-res.status(500).json({
-    success: false,
-    error: 'Server Error'
-});
-}
+        res.json({
+            username: user.username,
+            balance: user.balance, // Explicitly include balance
+            totalTransactions
+        });
+    } catch (error) {
+        console.error('Dashboard error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Error fetching dashboard data' 
+        });
+    }
 };
 
 // @desc    Get all transactions for logged-in user

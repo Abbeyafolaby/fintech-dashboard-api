@@ -36,8 +36,8 @@ app.use(cors());
 
 // Configure CORS middleware
 app.use(cors({
-  origin: true, // You can specify specific origins here if needed
-  credentials: true // Allow credentials (Authorization headers)
+  origin: true, // Allow requests from any origin
+  credentials: true // Allow credentials (cookies, authorization headers, etc.)
 }));
 
 // Serve static files from the public directory
