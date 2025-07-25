@@ -11,6 +11,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const path = require('path');
+const profileRoutes = require('./routes/profileRoutes');
 
 const app = express();
 
@@ -43,6 +44,15 @@ app.use(cors({
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Create uploads directory if it doesn't exist
+const fs = require('fs');
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
+
 const { swaggerUi, swaggerSpec } = require('./swagger');
 
 
@@ -62,6 +72,9 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api', dashboardRoutes);
 
 app.use('/api/transactions', transactionRoutes);
+
+// profile routes
+app.use('/api/profile', profileRoutes);
 
 app.use(errorHandler);
 

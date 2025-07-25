@@ -11,7 +11,8 @@ async function fetchDashboard() {
         }
 
         const data = await response.json();
-        console.log('Raw dashboard data:', data); // Debug log
+
+        console.log('Dashboard Data:', data);
 
         // Check if balance exists and is a number
         if (typeof data.balance !== 'number') {
@@ -19,6 +20,16 @@ async function fetchDashboard() {
         }
 
         const balance = data.balance ?? 40000; // Use nullish coalescing
+        
+        // Handle profile image - ensure the path starts with /
+        const profileImageHtml = data.profileImage 
+            ? `<img src="${data.profileImage.startsWith('/') ? data.profileImage : '/' + data.profileImage}" 
+                alt="Profile" 
+                class="profile-image"
+                onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'profile-image-placeholder\'>👤</div>'">` 
+            : `<div class="profile-image-placeholder">👤</div>`;
+        
+        document.getElementById('profileImage').innerHTML = profileImageHtml;
         
         document.getElementById('userInfo').innerHTML = `
             <h2>Welcome ${data.username}</h2>
@@ -28,6 +39,7 @@ async function fetchDashboard() {
     } catch (err) {
         console.error('Fetch Error:', err);
         document.getElementById('userInfo').innerHTML = `<p class="error">Error loading dashboard data</p>`;
+        document.getElementById('profileImage').innerHTML = `<div class="profile-image-placeholder">👤</div>`;
     }
 }
 

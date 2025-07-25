@@ -79,3 +79,25 @@ button:hover {
     color: #007bff;
     text-decoration: none;
 }
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px auto;
+    display: block;
+    border: 2px solid #ccc;
+}
+.profile-image-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    margin: 10px auto;
+    font-size: 2rem;
+    color: #666;
+}

@@ -6,25 +6,20 @@ const Transaction = require('../models/Transactions');
 // @access  Private
 exports.getDashboard = async (req, res) => {
     try {
-        // Fetch user with balance included
-        const user = await User.findById(req.user.id);
+        // Fetch user with all fields including profileImage
+        const user = await User.findById(req.user._id);
         
-        // Debug log to check what's being fetched
-        console.log('User data from DB:', user);
-
-        // Get total transactions
-        const totalTransactions = await Transaction.countDocuments({ user: req.user.id });
-
         res.json({
+            success: true,
             username: user.username,
-            balance: user.balance, // Explicitly include balance
-            totalTransactions
+            balance: user.balance,
+            totalTransactions: user.totalTransactions || 0,
+            profileImage: user.profileImage 
         });
     } catch (error) {
-        console.error('Dashboard error:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Error fetching dashboard data' 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 };
