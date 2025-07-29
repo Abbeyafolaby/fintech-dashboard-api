@@ -9,11 +9,14 @@ exports.getDashboard = async (req, res) => {
         // Fetch user with all fields including profileImage
         const user = await User.findById(req.user._id);
         
+        // Calculate total transactions from the database
+        const totalTransactions = await Transaction.countDocuments({ user: req.user._id });
+        
         res.json({
             success: true,
             username: user.username,
             balance: user.balance,
-            totalTransactions: user.totalTransactions || 0,
+            totalTransactions: totalTransactions, 
             profileImage: user.profileImage 
         });
     } catch (error) {
