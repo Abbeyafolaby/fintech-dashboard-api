@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -11,7 +12,8 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const path = require('path');
-const profileRoutes = require('./routes/profileRoutes');
+const profileRoutes = require('./routes/profileRoutes'); 
+const uploadeRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
@@ -44,11 +46,18 @@ app.use(cors({
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Create uploads directory if it doesn't exist
-const fs = require('fs');
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
-}
+// Create upload directories if they don't exist
+
+const createUploadDirs = () => {
+  const dirs = ['uploads', 'uploads/images', 'uploads/videos'];
+  dirs.forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  });
+};
+
+createUploadDirs();
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
@@ -75,6 +84,9 @@ app.use('/api/transactions', transactionRoutes);
 
 // profile routes
 app.use('/api/profile', profileRoutes);
+
+// Upload routes
+app.use('/api', uploadeRoutes);
 
 app.use(errorHandler);
 
