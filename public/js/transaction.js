@@ -14,7 +14,7 @@ document.getElementById('transactionForm').addEventListener('submit', async (e) 
     };
 
     try {
-        const response = await fetch('/api/transactions', {
+        const response = await fetch('fintech-dashboard-api-production.up.railway.app/api/transactions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ document.getElementById('signUpForm').addEventListener('submit', async (e) => {
     };
 
     try {
-        const response = await fetch('/api/auth/register', {
+        const response = await fetch('fintech-dashboard-api-production.up.railway.app/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
