@@ -1,3 +1,8 @@
+// Check if user is logged in
+if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+}
+
 async function fetchDashboard() {
     try {
         const response = await fetch('/api/dashboard', {
