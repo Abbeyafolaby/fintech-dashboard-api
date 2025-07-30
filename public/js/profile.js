@@ -6,7 +6,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     formData.append('profile', document.getElementById('profile').files[0]);
 
     try {
-        const response = await fetch('/api/profile/upload-profile', {
+        const response = await fetch('https://fintech-dashboard-api-production.up.railway.app/api/profile/upload-profile', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

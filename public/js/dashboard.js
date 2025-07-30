@@ -5,7 +5,7 @@ if (!localStorage.getItem('token')) {
 
 async function fetchDashboard() {
     try {
-        const response = await fetch('/api/dashboard', {
+        const response = await fetch('https://fintech-dashboard-api-production.up.railway.app/api/dashboard', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
