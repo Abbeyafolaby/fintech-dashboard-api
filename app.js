@@ -96,4 +96,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Connect to database
 connectDB();
 
+// health route
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK' });
+});
+
 module.exports = app;
