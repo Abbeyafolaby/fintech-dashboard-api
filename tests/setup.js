@@ -6,7 +6,9 @@ let mongoServer;
 // Global setup
 beforeAll(async () => {
   // Close any existing connections
-  await mongoose.disconnect();
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
   
   // Create new in-memory server
   mongoServer = await MongoMemoryServer.create();
@@ -15,14 +17,20 @@ beforeAll(async () => {
   // Connect to the in-memory database
   await mongoose.connect(mongoUri);
   
-  // Override the app's database connection
+  // Set test environment variables
   process.env.MONGO_URI = mongoUri;
+  process.env.JWT_SECRET = 'test-jwt-secret-key';
+  process.env.NODE_ENV = 'test';
 });
 
 // Global teardown
 afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
+  if (mongoServer) {
+    await mongoServer.stop();
+  }
 });
 
 // Clean collections between tests
